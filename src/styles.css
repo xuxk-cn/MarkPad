@@ -1,0 +1,680 @@
+:root {
+  --app-font-size: 16px;
+  font-family: "Cascadia Code", "Fira Code", "Consolas", "Microsoft YaHei", monospace;
+  font-size: var(--app-font-size);
+  line-height: 1.6;
+}
+
+:root,
+[data-theme="light"] {
+  color-scheme: light;
+  /* 对齐 Obsidian 默认浅色：background-primary / modifier-border 观感 */
+  --bg-app: #ffffff;
+  --bg-title: #f7f7f7;
+  --bg-menu: #ffffff;
+  --fg: #222222;
+  --fg-muted: #5c5c5c;
+  --border: #e8e8e8;
+  --border-btn: #d4d4d4;
+  --btn-bg: #ffffff;
+  --btn-bg-hover: #f0f0f0;
+  --caret: #222222;
+  --overlay-fg: #222222;
+  --blockquote-border: #e0e0e0;
+  --blockquote-fg: #5a5a5a;
+  --mark-bg: #fff3a3;
+  --math-fg: #086dd7;
+  --comment-fg: #777777;
+  /* Table：参考 Obsidian Editor Table 默认（细边框、浅灰表头） */
+  --table-border: #e4e4e4;
+  --table-border-width: 1px;
+  --table-surface: #ffffff;
+  --table-head-bg: #f2f2f2;
+  --table-header-fg: #1a1a1a;
+  --accent: #6e40c9;
+  --accent-soft: rgba(110, 64, 201, 0.12);
+  --accent-border: rgba(110, 64, 201, 0.45);
+  --selection-bg: rgba(110, 64, 201, 0.28);
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+  /* 对齐 Obsidian 默认深色底与文字对比 */
+  --bg-app: #1e1e1e;
+  --bg-title: #252525;
+  --bg-menu: #2d2d2d;
+  --fg: #dcddde;
+  --fg-muted: #999999;
+  --border: #3d3d3d;
+  --border-btn: #505050;
+  --btn-bg: #333333;
+  --btn-bg-hover: #3f3f3f;
+  --caret: #e0e0e0;
+  --overlay-fg: #dcddde;
+  --blockquote-border: #454545;
+  --blockquote-fg: #a8a8a8;
+  --mark-bg: #5c4d00;
+  --math-fg: #7eb6ff;
+  --comment-fg: #888888;
+  --table-border: #3a3a3a;
+  --table-border-width: 1px;
+  --table-surface: #1e1e1e;
+  --table-head-bg: #262626;
+  --table-header-fg: #e6e6e6;
+  /* Obsidian 默认强调色（紫）用于插入表格网格等控件的选中态 */
+  --accent: #a68bfa;
+  --accent-soft: rgba(166, 139, 250, 0.22);
+  --accent-border: rgba(166, 139, 250, 0.55);
+  --selection-bg: rgba(166, 139, 250, 0.35);
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  color: var(--fg);
+  background: var(--bg-app);
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+/* ── 工具栏 ── */
+#titlebar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 36px;
+  padding: 0 12px;
+  background: var(--bg-title);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  user-select: none;
+}
+
+.titlebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  flex: 1;
+  padding-right: 8px;
+}
+
+#titlebar-logo {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+  flex-shrink: 0;
+  pointer-events: none;
+}
+
+#titlebar-filename {
+  font-size: 13px;
+  color: var(--fg-muted);
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#titlebar-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+#recent-select {
+  max-width: 160px;
+  font-size: 12px;
+  padding: 3px 6px;
+  border: 1px solid var(--border-btn);
+  border-radius: 4px;
+  background: var(--btn-bg);
+  color: var(--fg);
+  font-family: inherit;
+  cursor: pointer;
+}
+
+#titlebar-actions button {
+  padding: 4px 12px;
+  font-size: 13px;
+  border: 1px solid var(--border-btn);
+  border-radius: 4px;
+  background: var(--btn-bg);
+  color: var(--fg);
+  cursor: pointer;
+  font-family: inherit;
+}
+
+#titlebar-actions button:hover {
+  background: var(--btn-bg-hover);
+}
+
+/* ── 查找条（§6 单文档搜索） ── */
+.find-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-title);
+  flex-shrink: 0;
+}
+
+.find-bar.hidden {
+  display: none;
+}
+
+.find-bar__label {
+  font-size: 12px;
+  color: var(--fg-muted);
+}
+
+#find-input {
+  flex: 1;
+  min-width: 120px;
+  max-width: 420px;
+  padding: 4px 8px;
+  font-size: 13px;
+  border: 1px solid var(--border-btn);
+  border-radius: 4px;
+  background: var(--btn-bg);
+  color: var(--fg);
+  font-family: inherit;
+}
+
+.find-bar__meta {
+  font-size: 12px;
+  color: var(--fg-muted);
+  white-space: nowrap;
+}
+
+#find-next,
+#find-close {
+  padding: 4px 10px;
+}
+
+#find-close {
+  font-size: 18px;
+  line-height: 1;
+  padding: 2px 8px 4px;
+}
+
+/* ── 编辑器容器 ── */
+#editor-wrapper {
+  position: relative;
+  flex: 1;
+  overflow-y: auto;
+}
+
+/* ── 源码层与叠加层共同样式 ── */
+#editor-source,
+#editor-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  min-height: 100vh;
+  padding: 2rem 2rem 40vh 2rem;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  box-sizing: border-box;
+}
+
+#editor-source {
+  color: transparent;
+  caret-color: var(--caret);
+  background: transparent;
+  z-index: 2;
+  outline: none;
+}
+
+#editor-wrapper:focus-within #editor-source::selection {
+  background: var(--selection-bg);
+  color: var(--fg);
+}
+
+/* 有选区时只显示源码层，避免透明选区与叠加层预览叠成双影 */
+#editor-wrapper.editor-has-selection #editor-source {
+  color: var(--fg);
+}
+
+#editor-wrapper.editor-has-selection #editor-source::selection {
+  background: var(--selection-bg);
+  color: var(--fg);
+}
+
+#editor-wrapper.editor-has-selection #editor-overlay {
+  visibility: hidden;
+}
+
+#editor-overlay {
+  z-index: 1;
+  pointer-events: none;
+  color: var(--overlay-fg);
+}
+
+#editor-overlay .md-ov-spacer {
+  width: 100%;
+  pointer-events: none;
+}
+
+#editor-overlay .md-ov-slice {
+  display: block;
+}
+
+/* 逐行叠加：行盒与源码一致（禁止大标题撑高，否则 wrapper 可滚动区 > 可编辑区，光标到不了底） */
+#editor-overlay .md-line {
+  display: block;
+  min-height: 1.6em;
+  line-height: 1.6;
+  font-size: inherit;
+  margin: 0;
+  padding: 0;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+/* GFM 管道表叠加层：配色与圆角贴近 Obsidian 默认阅读/ Live Preview 表格 */
+#editor-overlay .md-table-wrap {
+  display: block;
+  border: var(--table-border-width) solid var(--table-border);
+  border-radius: 4px;
+  overflow: hidden;
+  margin: 0.15em 0 0.3em;
+  background: var(--table-surface);
+  box-sizing: border-box;
+}
+
+#editor-overlay .md-table-wrap .md-line.md-table-row {
+  display: flex;
+  align-items: stretch;
+  flex-direction: row;
+  min-height: 1.6em;
+  margin: 0;
+  border-bottom: var(--table-border-width) solid var(--table-border);
+}
+
+#editor-overlay .md-table-wrap .md-line.md-table-row:last-child {
+  border-bottom: none;
+}
+
+#editor-overlay .md-table-cell {
+  flex: 1 1 0;
+  min-width: 0;
+  padding: 0 10px;
+  border-right: var(--table-border-width) solid var(--table-border);
+  box-sizing: border-box;
+  white-space: pre-wrap;
+  word-break: break-word;
+  color: var(--overlay-fg);
+}
+
+#editor-overlay .md-table-cell:last-child {
+  border-right: none;
+}
+
+#editor-overlay .md-table-row--head .md-table-cell {
+  font-weight: 500;
+  background: var(--table-head-bg);
+  color: var(--table-header-fg);
+}
+
+#editor-overlay .md-table-row--sep .md-table-cell,
+#editor-overlay .md-table-cell--sep {
+  background: var(--table-head-bg);
+  color: var(--fg-muted);
+  font-size: 0.92em;
+}
+
+/* 编辑表内：源码行模式 */
+#editor-overlay .md-table-wrap--editing {
+  border: none;
+  border-radius: 0;
+  overflow: visible;
+  margin: 0;
+  background: transparent;
+}
+
+#editor-overlay .md-table-wrap--editing .md-table-line {
+  margin: 0;
+  border-bottom: none;
+}
+
+#editor-overlay .md-table-wrap--editing .md-table-line:last-child {
+  border-bottom: none;
+}
+
+#editor-overlay .md-table-line--head {
+  background: transparent;
+  font-weight: inherit;
+}
+
+#editor-overlay .md-table-line--head .md-table-src {
+  color: var(--overlay-fg);
+}
+
+#editor-overlay .md-table-line--sep {
+  background: transparent;
+}
+
+#editor-overlay .md-table-line--sep .md-table-src {
+  color: var(--overlay-fg);
+}
+
+#editor-overlay .md-table-src {
+  color: var(--overlay-fg);
+}
+
+#editor-overlay .md-h1,
+#editor-overlay .md-h2,
+#editor-overlay .md-h3,
+#editor-overlay .md-h4,
+#editor-overlay .md-h5,
+#editor-overlay .md-h6 {
+  display: inline;
+}
+
+/*
+ * 标题分级字号：与行高配合使「字高 × 行高」仍约等于父行 1.6em，
+ * 避免单行叠加层显著高于等宽源码行（减轻文末滚动/光标错位）。
+ */
+#editor-overlay .md-h1,
+#editor-overlay .md-h2,
+#editor-overlay .md-h3,
+#editor-overlay .md-h4,
+#editor-overlay .md-h5,
+#editor-overlay .md-h6 {
+  font-size: inherit;
+  line-height: inherit;
+  font-weight: 700;
+}
+#editor-overlay .md-h6 {
+  font-weight: 600;
+  color: color-mix(in srgb, var(--overlay-fg) 88%, var(--bg-app));
+}
+
+#editor-overlay .md-bq {
+  display: inline;
+  border-left: 3px solid var(--blockquote-border);
+  padding-left: 0.5em;
+  margin-left: 0;
+  color: var(--blockquote-fg);
+}
+
+#editor-overlay .md-li {
+  display: inline;
+  padding-left: 0;
+}
+
+#editor-overlay .md-li::before {
+  content: "• ";
+}
+
+#editor-overlay .md-hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 0;
+  height: 0;
+  line-height: 0;
+}
+
+#editor-overlay code {
+  background: color-mix(in srgb, var(--fg) 8%, transparent);
+  padding: 0 0.2em;
+  border-radius: 2px;
+}
+
+#editor-overlay del {
+  text-decoration: line-through;
+  opacity: 0.85;
+}
+
+#editor-overlay .md-mark {
+  background: var(--mark-bg);
+  padding: 0 0.15em;
+  border-radius: 2px;
+}
+
+#editor-overlay .md-math {
+  color: var(--math-fg);
+  font-style: italic;
+}
+
+#editor-overlay .md-comment {
+  color: var(--comment-fg);
+  font-style: italic;
+}
+
+/* ── 设置对话框 ── */
+.settings-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.settings-modal.hidden {
+  display: none;
+}
+
+.settings-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.settings-modal__panel {
+  position: relative;
+  z-index: 1;
+  width: min(360px, calc(100vw - 32px));
+  padding: 20px 22px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg-app);
+  color: var(--fg);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.settings-modal__panel h2 {
+  margin: 0 0 16px;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.settings-field {
+  border: none;
+  margin: 0 0 14px;
+  padding: 0;
+}
+
+.settings-field legend {
+  font-size: 12px;
+  color: var(--fg-muted);
+  margin-bottom: 8px;
+}
+
+.settings-radio {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 6px 0;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.settings-hint {
+  margin: 0 0 16px;
+  font-size: 12px;
+  color: var(--fg-muted);
+}
+
+.settings-close {
+  width: 100%;
+  padding: 8px 12px;
+  font-size: 14px;
+  border: 1px solid var(--border-btn);
+  border-radius: 4px;
+  background: var(--btn-bg);
+  color: var(--fg);
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.settings-close:hover {
+  background: var(--btn-bg-hover);
+}
+
+/* ── 插入表格（Obsidian 式网格） ── */
+.table-insert-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.table-insert-modal.hidden {
+  display: none;
+}
+
+.table-insert-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.table-insert-modal__panel {
+  position: relative;
+  z-index: 1;
+  width: min(380px, calc(100vw - 32px));
+  padding: 18px 20px 20px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg-app);
+  color: var(--fg);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.table-insert-modal__title {
+  margin: 0 0 8px;
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.table-insert-modal__hint {
+  margin: 0 0 14px;
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--fg-muted);
+}
+
+.table-insert-grid {
+  display: grid;
+  grid-template-columns: repeat(10, 16px);
+  grid-template-rows: repeat(10, 16px);
+  gap: 3px;
+  margin: 0 auto 12px;
+  width: fit-content;
+  user-select: none;
+}
+
+.table-insert-grid__cell {
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  margin: 0;
+  border: 1px solid var(--border-btn);
+  border-radius: 2px;
+  background: var(--btn-bg);
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.table-insert-grid__cell:hover {
+  border-color: var(--accent-border);
+  background: var(--accent-soft);
+}
+
+.table-insert-grid__cell.is-active {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  box-shadow: inset 0 0 0 1px var(--accent);
+}
+
+.table-insert-modal__dims {
+  margin: 0;
+  text-align: center;
+  font-size: 13px;
+  color: var(--fg);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── 右键菜单 ── */
+.ctx-menu {
+  position: fixed;
+  z-index: 900;
+  min-width: 200px;
+  max-height: min(80vh, 520px);
+  overflow-y: auto;
+  padding: 4px 0;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg-menu);
+  color: var(--fg);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.ctx-menu.hidden {
+  display: none;
+}
+
+.ctx-menu__header {
+  padding: 6px 12px 4px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--fg-muted);
+  user-select: none;
+}
+
+.ctx-menu__item {
+  display: block;
+  width: 100%;
+  padding: 7px 14px;
+  border: none;
+  background: transparent;
+  color: var(--fg);
+  font-size: 13px;
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.ctx-menu__item:hover:not(:disabled) {
+  background: var(--btn-bg-hover);
+}
+
+.ctx-menu__item:disabled {
+  color: var(--fg-muted);
+  opacity: 0.45;
+  cursor: default;
+}
+
+.ctx-menu__sep {
+  height: 1px;
+  margin: 4px 0;
+  background: var(--border);
+}
