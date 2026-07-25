@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"><title>test</title></head>
+<body>
+<button id="test">Click</button>
+<script type="module">
+import { invoke } from "@tauri-apps/api/core";
+document.getElementById("test").onclick = async () => {
+  try {
+    const r = await invoke("file_current_path");
+    alert("OK: " + JSON.stringify(r));
+  } catch(e) {
+    alert("ERR: " + e);
+  }
+};
+</script>
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MarkPad</title>
+    <link rel="stylesheet" href="/src/styles.css" />
+  </head>
+  <body>
+    <div id="app">
+      <div id="titlebar">
+        <div class="titlebar-brand">
+          <img
+            id="titlebar-logo"
+            src="/logo.png"
+            width="22"
+            height="22"
+            alt="MarkPad"
+            decoding="async"
+          />
+          <span id="titlebar-filename">未命名 — MarkPad</span>
+        </div>
+        <div id="titlebar-actions">
+          <select id="recent-select" data-i18n-title="recent.placeholder" aria-label="Recent files"></select>
+          <button type="button" id="btn-new" data-i18n="btn.new" data-i18n-title="btn.new">新建</button>
+          <button type="button" id="btn-open" data-i18n="btn.open" data-i18n-title="btn.open">打开</button>
+          <button type="button" id="btn-save" data-i18n="btn.save" data-i18n-title="btn.save">保存</button>
+          <button type="button" id="btn-copy-md" data-i18n="btn.copy" data-i18n-title="btn.copy">复制</button>
+          <button type="button" id="btn-settings" data-i18n="btn.settings" data-i18n-title="btn.settings">设置</button>
+        </div>
+      </div>
+
+      <div id="find-bar" class="find-bar hidden" role="search">
+        <label class="find-bar__label" for="find-input" data-i18n="find.label">查找</label>
+        <input
+          type="search"
+          id="find-input"
+          data-i18n-placeholder="find.placeholder"
+          placeholder="在文档中搜索…"
+          autocomplete="off"
+          spellcheck="false"
+        />
+        <span id="find-meta" class="find-bar__meta"></span>
+        <button type="button" id="find-next" data-i18n="find.next" data-i18n-title="find.next">下一个</button>
+        <button type="button" id="find-close" data-i18n-title="find.close" aria-label="Close">×</button>
+      </div>
+
+      <div id="editor-wrapper">
+        <div id="editor-source" contenteditable="plaintext-only" spellcheck="false"></div>
+        <div id="editor-overlay" aria-hidden="true"></div>
+      </div>
+    </div>
+
+    <div id="editor-context-menu" class="ctx-menu hidden" role="menu"></div>
+
+    <div id="settings-modal" class="settings-modal hidden" role="dialog" aria-modal="true" aria-labelledby="settings-title">
+      <div class="settings-modal__backdrop"></div>
+      <div class="settings-modal__panel">
+        <h2 id="settings-title" data-i18n="settings.title">设置</h2>
+
+        <fieldset class="settings-field">
+          <legend data-i18n="settings.theme">外观</legend>
+          <label class="settings-radio">
+            <input type="radio" name="theme" id="settings-theme-light" value="light" />
+            <span data-i18n="settings.themeLight">浅色</span>
+          </label>
+          <label class="settings-radio">
+            <input type="radio" name="theme" id="settings-theme-dark" value="dark" />
+            <span data-i18n="settings.themeDark">深色</span>
+          </label>
+        </fieldset>
+
+        <fieldset class="settings-field">
+          <legend data-i18n="settings.language">语言</legend>
+          <label class="settings-radio">
+            <input type="radio" name="locale" id="settings-lang-zh" value="zh" />
+            <span data-i18n="settings.langZh">中文</span>
+          </label>
+          <label class="settings-radio">
+            <input type="radio" name="locale" id="settings-lang-en" value="en" />
+            <span data-i18n="settings.langEn">English</span>
+          </label>
+        </fieldset>
+
+        <p id="settings-font-size-label" class="settings-hint">字号：16px（Ctrl + 滚轮）</p>
+
+        <button type="button" id="settings-close" class="settings-close" data-i18n="settings.close">关闭</button>
+      </div>
+    </div>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

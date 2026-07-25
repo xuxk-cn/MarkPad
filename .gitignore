@@ -1,0 +1,9 @@
+node_modules/
+dist/
+target/
+output/
+Releases/
+*.log
+.vite/
+scripts/
+垃圾清理.md
